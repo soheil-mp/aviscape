@@ -33,8 +33,10 @@ flowchart LR
     subgraph batch["Batch platform (M8, M9)"]
         DAG["Dagster assets, checks,<br/>schedules"]
         DBT["dbt models + tests"]
-        EXT["Open-Meteo, GBIF,<br/>stream catalogue"]
+        EXT["Open-Meteo, GBIF, BirdWeather,<br/>stream catalogue"]
     end
+
+    BW["BirdWeather live detections<br/>(aggregated, optional)"]
 
     API["FastAPI read API<br/>+ live SSE (M11)"]
     UI["Web dashboard (M12)"]
@@ -42,6 +44,7 @@ flowchart LR
 
     sources --> DEC
     DSP -- "Avro" --> K
+    BW -- "15-min counts" --> K
     K <--> SP
     K --> SINK --> DL
     EXT --> DAG --> DL
@@ -71,6 +74,7 @@ derived, minute-level (or one-second band-level) numbers
 | `aviscape-edge` | stream adapters, windowing, duty cycling, producer, store-and-forward spool | PyAV, `sounddevice`, `confluent-kafka` | M5 |
 | `aviscape-stream` | validation, dedup, event-time handling, enrichment, rollups, status, dawn-chorus onset | Quix Streams | M6 |
 | lake sink | Kafka to DuckLake with offsets committed in the same catalog transaction | DuckDB + DuckLake | M7 |
+| BirdWeather live context | `newDetection` subscription for nearby stations, aggregated in memory to 15-minute species counts | GraphQL client, Quix Streams | M6.11 |
 | orchestration | external sources, maintenance, budgets, asset checks | Dagster 1.13 | M8 |
 | transformations | staging, dimensions, facts, marts, baselines | dbt-core + dbt-duckdb | M9 |
 | `aviscape-api` | read-only REST API, live server-sent events, false-colour tiles | FastAPI, Pydantic v2 | M11 |
@@ -94,6 +98,7 @@ in time **and** bytes, derived from the storage budget
 | `aviscape.sensor.registry.v1` | sensor metadata (coarse location, codec, schedule) | compact | latest per key | yes, as SCD2 |
 | `aviscape.sensor.status.v1` | online / degraded / offline / quarantined | compact | latest per key | yes |
 | `aviscape.audio.minute-indices.enriched.v1` | validated, deduplicated, sun-relative, enriched | delete | 3 days | yes (silver) |
+| `aviscape.context.birdweather-counts.v1` | 15-minute species detection counts per grid cell from nearby BirdWeather stations | delete | 7 days | yes |
 | `aviscape.quality.dlq.v1` | rejected records with a reason code | delete | 7 days | yes (quarantine) |
 | `aviscape.alerts.v1` | sensor offline, clipping, rain, budget alerts | delete | 7 days | yes |
 
@@ -104,9 +109,9 @@ DuckLake tables in three schemas. Data files are Parquet (zstd) in the
 
 | Schema | Tables | Written by | Notes |
 | :-- | :-- | :-- | :-- |
-| `bronze` | `minute_indices`, `spectral_indices`, `events`, `heartbeats`, `dlq`, `stream_catalogue`, `weather_hourly`, `gbif_context` | lake sink, Dagster | append-only, with Kafka topic, partition, offset and ingest time |
+| `bronze` | `minute_indices`, `spectral_indices`, `events`, `heartbeats`, `dlq`, `stream_catalogue`, `weather_hourly`, `gbif_context`, `birdweather_counts` | lake sink, Dagster | append-only, with Kafka topic, partition, offset and ingest time |
 | `silver` | `minute_indices` (deduplicated, flagged, sun-relative), `spectral_indices_q8` (uint8, 128 bins), `events`, `dq_results` | lake sink, dbt | one row per `(sensor_id, window_start)` |
-| `gold` | `dim_sensor` (SCD2), `dim_date`, `dim_sun_time`, `fct_minute_indices`, `fct_acoustic_events`, `fct_weather_hourly`, `mart_daily_soundscape`, `mart_dawn_chorus`, `mart_weather_adjusted_activity`, `mart_ldfc_index` | dbt | what the API reads |
+| `gold` | `dim_sensor` (SCD2), `dim_date`, `dim_sun_time`, `fct_minute_indices`, `fct_acoustic_events`, `fct_weather_hourly`, `fct_birdweather_hourly`, `mart_daily_soundscape`, `mart_dawn_chorus`, `mart_weather_adjusted_activity`, `mart_species_context`, `mart_ldfc_index` | dbt | what the API reads |
 
 ## 5. Time semantics
 

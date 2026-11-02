@@ -30,6 +30,7 @@ change is switched off by configuration until it is reviewed again.
 | [xeno-canto API v3](https://xeno-canto.org/explore/api) | optional replay corpus of bird recordings | personal API key in `XENO_CANTO_API_KEY` | key must not be shared or published; per-recording Creative Commons licence | recordist names not stored; only catalogue number, licence URL and species kept; NoDerivatives licences excluded; audio never redistributed; cache capped at 150 MB and kept outside git | off |
 | [Open-Meteo](https://open-meteo.com/) | hourly precipitation, wind, temperature, cloud cover; historical archive | REST, no key | free for non-commercial use, data under CC BY 4.0; attribution required; fewer than about 10,000 calls per day | queried by coarse grid cell only | on |
 | [GBIF](https://www.gbif.org/) occurrence API | monthly counts of bird species recorded near each sensor, as context | REST, no key | data licences vary per dataset (CC0, CC BY, CC BY-NC); cite GBIF.org with the query date | facet counts only (no record-level data, no recorder names) | on |
+| [BirdWeather](https://www.birdweather.com/) GraphQL API | species detected by nearby community stations, as labelled third-party context: hourly counts (batch) and 15-minute counts (live) | GraphQL `https://app.birdweather.com/graphql`, no key; aggregate queries and the `newDetection` subscription | [terms of service](https://www.birdweather.com/terms-of-service) (last updated 22 October 2022): personal, non-commercial use; no automated crawling or scraping; no copying or storing a significant portion of the content; the API is not mentioned, so use is confirmed with BirdWeather first | aggregates per species, 0.1° grid cell and time bucket only; station names and IDs not stored; stations with location privacy excluded; no audio or audio URLs ([ADR 0008](adr/0008-birdweather-detections-as-third-party-context.md)) | **off** until BirdWeather confirms (M8.11) |
 | Sun and moon positions | civil, nautical and astronomical twilight, sunrise, sunset | computed locally (`astral` library, Apache-2.0) | n/a | n/a | on |
 | OpenStreetMap basemap (dashboard) | map background | self-hosted PMTiles extract, no third-party tile server | ODbL; "© OpenStreetMap contributors" | n/a | on |
 
@@ -40,6 +41,8 @@ Shown in the dashboard footer, the API's `/v1/about` response and the docs:
 > Live sounds: Locus Sonus – Locustream open microphones (www.locusonus.org).
 > Weather data by Open-Meteo.com (CC BY 4.0).
 > Species context: GBIF.org, occurrence search, accessed on the date shown.
+> Nearby detections: BirdWeather (birdweather.com), automated BirdNET
+> detections from community stations, unverified.
 > Map data © OpenStreetMap contributors.
 
 When the optional xeno-canto corpus is used, each derived result links to
@@ -50,7 +53,7 @@ carries the recordist's attribution and licence.
 
 | Source | Why not |
 | :-- | :-- |
-| BirdWeather and similar detection feeds | detections come from a machine-learning classifier; every signal in this platform is produced by documented, deterministic methods ([ADR 0002](adr/0002-deterministic-signal-processing-without-machine-learning.md)) |
+| BirdWeather detection-level data and soundscape audio | the terms forbid storing a significant portion of the content; only aggregates are used ([ADR 0008](adr/0008-birdweather-detections-as-third-party-context.md)) |
 | eBird API 2.0 | needs a key; non-commercial licence that limits sharing with third parties; kept as an open question in the roadmap |
 | Cyberforest archive (University of Tokyo) | no standard open licence found for the archive; would need permission |
 | Locus Sonus streams outside the allow-list | most are urban or underwater; the allow-list keeps bandwidth and relevance under control |
@@ -70,3 +73,19 @@ list (checked 2 November 2026; 11 fields per entry):
 | `city`, `country` | yes | `city`, `country` |
 | `artist` | **no** | dropped at the connector |
 | `source`, `link` | yes | provenance |
+
+## BirdWeather fields
+
+What the BirdWeather connector keeps (schema checked by introspection on
+2 November 2026):
+
+| Data | Kept | As |
+| :-- | :-- | :-- |
+| species (`id`, `commonName`, `scientificName`) | yes | species dimension |
+| detection counts from `counts` / `topSpecies` over a sensor's bounding box | yes | `detections` per species, grid cell and hour |
+| live `newDetection` events | aggregated in memory | `detections` per species, grid cell and 15 minutes |
+| number of contributing stations | yes | `station_count` |
+| station `name`, `id`, `location`, exact `coords` | **no** | used in memory only, to filter the subscription |
+| stations with `locationPrivacy` enabled | **no** | excluded |
+| per-detection `confidence`, `probability`, `score`, `certainty` | **no** | a minimum score is applied as a query filter only |
+| `soundscape` audio, URLs and file names | **no** | never requested |

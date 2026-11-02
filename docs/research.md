@@ -200,12 +200,22 @@ verified on 2 November 2026:
   calls per day.
 - **GBIF** occurrence search supports facet counts, so monthly bird species
   counts per area can be read without touching record-level data.
+- **BirdWeather** exposes detections from its community stations through a
+  public GraphQL API without a key: aggregate queries (`counts`,
+  `topSpecies`, `dailyDetectionCounts`) filterable by a bounding box, and a
+  real-time `newDetection` subscription filterable by station, country and
+  score. Detections are produced by the BirdNET classifier. Its terms of
+  service (last updated 22 October 2022) allow personal, non-commercial use,
+  forbid automated crawling or scraping and storing a significant portion of
+  the content, and do not mention the API. aviscape therefore uses it only
+  as labelled, aggregate-only context, disabled until BirdWeather confirms
+  the use ([ADR 0008](adr/0008-birdweather-detections-as-third-party-context.md)).
+  Station records carry names and a location-privacy flag; names are not
+  stored and private stations are excluded.
 
-Considered and **not used**: BirdWeather and other feeds whose detections are
-produced by machine-learning classifiers (conflicts with
-[ADR 0002](adr/0002-deterministic-signal-processing-without-machine-learning.md));
-eBird (needs a key, and its terms restrict sharing; may return as an optional
-connector, see the roadmap's open questions).
+Considered and **not used**: eBird (needs a key, and its terms restrict
+sharing; may return as an optional connector, see the roadmap's open
+questions).
 
 ## 7. Tool landscape (checked 2 November 2026)
 
@@ -241,9 +251,10 @@ times, to be measured in M7.7):
 | Acoustic events | ≤ 2,000 events per day × ~48 B | 90 days | 96 KB | 0.04 GB |
 | Band levels (live only) | 1 s, ~30 bands | 24 h in Kafka only | 8.6 MB | 0.04 GB |
 | Weather, sun, GBIF context | hourly / daily / monthly | 365 days | < 2 KB | < 0.01 GB |
+| BirdWeather context | ≤ 25 species × 24 hours × ~40 B per grid cell | 365 days | 24 KB | 0.04 GB |
 
 With topic byte caps (~0.3 GB), the catalog (~0.1 GB) and the optional replay
-corpus (≤ 0.15 GB), the total stays below about 1.6 GB, inside the default
+corpus (≤ 0.15 GB), the total stays below about 1.7 GB, inside the default
 2 GiB budget. Raw audio at rest from live sources: **0 bytes**, by design.
 
 **Bandwidth** is the larger cost. A 128 kbit/s MP3 stream is about 1.4 GB per
@@ -276,6 +287,8 @@ Tooling and data-source pages consulted on 2 November 2026:
 - Locus Sonus soundmap and terms of use: <https://locusonus.org/soundmap/>
 - xeno-canto API v3 documentation: <https://xeno-canto.org/explore/api>
 - eBird API terms of use: <https://www.birds.cornell.edu/home/ebird-api-terms-of-use/>
+- BirdWeather GraphQL API: <https://app.birdweather.com/api/>
+- BirdWeather terms of service: <https://www.birdweather.com/terms-of-service>
 - Orcasound node (live hydrophone streaming): <https://github.com/orcasound/orcanode>
 - DuckLake 1.0 announcement: <https://ducklake.select/2026/04/13/ducklake-10/>
 - Apache Kafka 4.2.0 release announcement: <https://kafka.apache.org/blog/2026/02/17/apache-kafka-4.2.0-release-announcement/>

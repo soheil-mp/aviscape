@@ -1,6 +1,6 @@
 # 0002. Deterministic signal processing, no machine learning
 
-- Status: accepted
+- Status: accepted; source rule amended by [0008](0008-birdweather-detections-as-third-party-context.md)
 - Date: 2026-11-02
 
 ## Context and problem
@@ -35,7 +35,10 @@ audio or of other data, with parameters that are written down and citable:
 
 The platform contains no trained models, no inference, no embeddings, no
 machine-learning libraries, and no datasets meant for training or evaluating
-models. Sources whose content is produced by classifiers are not ingested.
+models. Detections produced by third-party classifiers are never used to
+compute anything here; they may only be shown as labelled, aggregated
+context under the limits in
+[ADR 0008](0008-birdweather-detections-as-third-party-context.md).
 
 ## Consequences
 
