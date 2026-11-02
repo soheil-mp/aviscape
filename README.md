@@ -77,12 +77,16 @@ The reasons behind each choice are in the
 
 ## How to run it
 
-**Today** there is nothing to run, only documents to read:
+**Today** the development toolchain runs; the platform itself does not yet.
+You need [uv](https://docs.astral.sh/uv/) and [just](https://just.systems/)
+(`uv tool install rust-just`):
 
 ```sh
 git clone https://github.com/soheil-mp/aviscape.git
 cd aviscape
-pre-commit install   # secret scanning and hygiene checks on every commit
+just setup   # locked Python 3.13 environment and git hooks
+just check   # lint, strict type check, tests with coverage gates
+just         # list every recipe
 ```
 
 | Read | For |
