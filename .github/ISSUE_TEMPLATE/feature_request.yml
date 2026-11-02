@@ -1,0 +1,27 @@
+name: Idea or feature request
+description: Suggest something that is not on the roadmap yet.
+title: "idea: "
+labels: ["type: idea"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What do you propose?
+    validations:
+      required: true
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Project rules
+      description: See CONTRIBUTING.md.
+      options:
+        - label: It uses no machine learning (no models, inference, embeddings or training data).
+          required: true
+        - label: It stores no audio from live sources and no personal data.
+          required: true

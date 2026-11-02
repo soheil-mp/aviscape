@@ -1,0 +1,57 @@
+name: Bug report
+description: Something does not work as documented.
+title: "bug: "
+labels: ["type: bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do not paste secrets, audio recordings or
+        personal data into this form.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can it be reproduced?
+      description: The smallest set of steps, commands or configuration that shows the problem.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0 or a commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - dsp (signal processing)
+        - synth (simulator)
+        - contracts
+        - edge agent
+        - stream processing
+        - lakehouse
+        - orchestration (Dagster)
+        - transformations (dbt)
+        - api
+        - dashboard
+        - deployment
+        - docs
+        - not sure
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      render: text

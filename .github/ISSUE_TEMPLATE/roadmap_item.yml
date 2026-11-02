@@ -1,0 +1,29 @@
+name: Roadmap item
+description: Track one work item from ROADMAP.md.
+title: "M0.0: "
+labels: ["type: roadmap"]
+body:
+  - type: input
+    id: item
+    attributes:
+      label: Roadmap ID
+      placeholder: M2.6
+    validations:
+      required: true
+  - type: input
+    id: estimate
+    attributes:
+      label: Estimate (hours)
+    validations:
+      required: true
+  - type: textarea
+    id: done-when
+    attributes:
+      label: Done when
+      description: The acceptance test from the roadmap.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes and open questions
