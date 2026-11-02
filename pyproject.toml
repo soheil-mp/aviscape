@@ -37,7 +37,11 @@ aviscape-synth = { workspace = true }
 
 [dependency-groups]
 dev = [
+    "hypothesis>=6.170.14",
     "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "pytest-xdist>=3.8.0",
     "ruff>=0.17.3",
 ]
 
@@ -88,3 +92,30 @@ enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 mypy_path = "$MYPY_CONFIG_FILE_DIR/packages/aviscape-dsp/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-synth/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-contracts/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-edge/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-stream/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-api/src"
 files = ["packages", "tools"]
 explicit_package_bases = true
+
+# --- pytest, coverage, Hypothesis -------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["packages", "tools"]
+addopts = ["-ra", "--strict-markers", "--strict-config", "--import-mode=importlib"]
+xfail_strict = true
+filterwarnings = ["error"]
+markers = ["slow: long-running tests, excluded from the quick loop with -m 'not slow'"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source_pkgs = [
+    "aviscape_api",
+    "aviscape_contracts",
+    "aviscape_dsp",
+    "aviscape_edge",
+    "aviscape_stream",
+    "aviscape_synth",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "@overload", "raise NotImplementedError"]
