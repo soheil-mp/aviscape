@@ -266,7 +266,7 @@ tested, scanned for secrets and released the same way. **Estimate: 28 h.**
 | M0.9 | Release automation with release-please: Conventional Commits, CHANGELOG, SemVer tags, GitHub Releases | 2 | merging a `feat:` PR opens a release PR |
 | M0.10 | Dev container (VS Code and Codespaces) with uv, just and Docker-in-Docker | 2 | `just test` passes inside the container |
 | M0.11 | Docs site with Zensical, Mermaid and the existing research and ADRs; deployed to GitHub Pages from CI | 3 | site is live and rebuilt on every merge |
-| M0.12 | Licence compliance check: allow-list of dependency licences; fail on copyleft or unknown licences in shipped Python packages | 2 | an added GPL dependency fails CI |
+| ✅ M0.12 | Licence compliance check: allow-list of dependency licences; fail on copyleft or unknown licences in shipped Python packages | 2 | an added GPL dependency fails CI |
 
 **Demo:** open a pull request, watch every check run, merge it, and see a
 release PR and an updated docs site.

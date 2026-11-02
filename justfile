@@ -37,8 +37,13 @@ cov:
     {{ uv }} pytest -n auto --cov --cov-report=term --cov-report=xml
     {{ uv }} coverage report --include="*/aviscape_dsp/*" --fail-under=90
 
+# Fail if a shipped dependency has a licence outside the allow-list.
+licences:
+    uv export --frozen --no-dev --no-hashes --no-emit-workspace --no-header --no-annotate --format requirements.txt \
+        | {{ uv }} python -m tools.check_licences -
+
 # Run every check that CI runs on a pull request.
-check: lint typecheck cov
+check: lint typecheck cov licences
 
 # Run all pre-commit hooks against every file.
 hooks:

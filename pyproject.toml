@@ -119,3 +119,27 @@ fail_under = 80
 show_missing = true
 skip_covered = true
 exclude_also = ["if TYPE_CHECKING:", "@overload", "raise NotImplementedError"]
+
+# --- Dependency licence policy (checked by tools/check_licences.py) ----------
+[tool.aviscape.licences]
+# Licences compatible with shipping this project under MIT. "BSD" covers
+# packages that only declare the generic BSD trove classifier.
+allowed = [
+    "0BSD",
+    "Apache-2.0",
+    "BSD",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "CC0-1.0",
+    "ISC",
+    "MIT",
+    "MIT-0",
+    "MPL-2.0",
+    "PSF-2.0",
+    "Unlicense",
+    "Zlib",
+]
+
+[tool.aviscape.licences.exceptions]
+# "distribution-name" = "why it was reviewed and accepted"
