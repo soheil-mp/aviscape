@@ -260,7 +260,7 @@ tested, scanned for secrets and released the same way. **Estimate: 28 h.**
 | ✅ M0.3 | pytest with branch coverage, pytest-xdist, Hypothesis profiles (`dev`, `ci`); coverage gates | 3 | `just test` reports coverage; gates enforced in CI |
 | ✅ M0.4 | Extend pre-commit: Ruff, mypy, yamllint, actionlint, hadolint, shellcheck, markdownlint-cli2, Conventional Commit message check | 2 | all hooks pass on the repository |
 | ✅ M0.5 | `justfile` with documented recipes (`setup`, `lint`, `test`, `up`, `down`, `demo`, `docs`) | 1 | `just --list` documents every recipe |
-| M0.6 | GitHub Actions CI: lint, types, tests on 3.13 and 3.14; uv cache; concurrency groups; least-privilege `permissions`; actions pinned by SHA | 3 | CI green on `main`; median run under 5 minutes |
+| ✅ M0.6 | GitHub Actions CI: lint, types, tests on 3.13 and 3.14; uv cache; concurrency groups; least-privilege `permissions`; actions pinned by SHA | 3 | CI green on `main`; median run under 5 minutes |
 | M0.7 | Governance: CONTRIBUTING, CODE_OF_CONDUCT (Contributor Covenant 2.1), SECURITY.md, issue forms, PR template, CODEOWNERS, labels, ruleset protecting `main` | 3 | a test PR shows the template and required checks |
 | M0.8 | Renovate with grouped updates, lockfile maintenance and a weekly schedule | 2 | first Renovate PRs open and pass CI |
 | M0.9 | Release automation with release-please: Conventional Commits, CHANGELOG, SemVer tags, GitHub Releases | 2 | merging a `feat:` PR opens a release PR |
