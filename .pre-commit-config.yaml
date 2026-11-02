@@ -1,12 +1,16 @@
-# Hooks that run on every commit. Install once with: pre-commit install
-# More hooks (ruff, mypy, yamllint, actionlint, hadolint, ...) arrive with
-# roadmap item M0.4 together with the code they check.
+# Hooks that run on every commit (and on commit messages).
+# Install once with `just setup`, or: pre-commit install --install-hooks
+default_install_hook_types: [pre-commit, commit-msg]
+default_stages: [pre-commit]
+
 repos:
+  # --- Secrets ---------------------------------------------------------------
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.0
     hooks:
       - id: gitleaks
 
+  # --- Repository hygiene ----------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -21,3 +25,55 @@ repos:
         args: ["--fix=lf"]
       - id: trailing-whitespace
         args: ["--markdown-linebreak-ext=md"]
+
+  # --- Python ----------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: ["--fix"]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict, workspace environment)
+        entry: uv run --frozen mypy
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+
+  # --- YAML, GitHub Actions, Docker, shell, Markdown ----------------------------
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        args: ["--strict"]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
+  - repo: https://github.com/AleksaC/hadolint-py
+    rev: v2.15.1
+    hooks:
+      - id: hadolint
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1-1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.24.0
+    hooks:
+      - id: markdownlint-cli2
+
+  # --- Commit messages -------------------------------------------------------
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.5.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: ["--strict", "build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"]

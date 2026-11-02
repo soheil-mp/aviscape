@@ -1,0 +1,9 @@
+# Markdown style rules. Prose is wrapped by hand, and tables carry long cells.
+config:
+  default: true
+  MD013: false # line length
+  MD033: false # inline HTML (used for <br/> inside Mermaid labels)
+  MD041: false # first line need not be a heading (issue templates)
+ignores:
+  - ".venv/**"
+  - "**/node_modules/**"

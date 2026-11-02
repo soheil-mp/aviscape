@@ -258,7 +258,7 @@ tested, scanned for secrets and released the same way. **Estimate: 28 h.**
 | ✅ M0.1 | uv workspace with Python 3.13; package skeletons (`aviscape-dsp`, `aviscape-synth`, `aviscape-contracts`, `aviscape-edge`, `aviscape-stream`, `aviscape-api`) in `src/` layout with PEP 621 metadata; lockfile committed | 3 | `uv sync --locked` works on a fresh clone and every package imports |
 | ✅ M0.2 | Ruff (lint and format) and mypy `--strict`; `py.typed` markers | 2 | `just lint` passes; a deliberate violation fails CI |
 | ✅ M0.3 | pytest with branch coverage, pytest-xdist, Hypothesis profiles (`dev`, `ci`); coverage gates | 3 | `just test` reports coverage; gates enforced in CI |
-| M0.4 | Extend pre-commit: Ruff, mypy, yamllint, actionlint, hadolint, shellcheck, markdownlint-cli2, Conventional Commit message check | 2 | all hooks pass on the repository |
+| ✅ M0.4 | Extend pre-commit: Ruff, mypy, yamllint, actionlint, hadolint, shellcheck, markdownlint-cli2, Conventional Commit message check | 2 | all hooks pass on the repository |
 | ✅ M0.5 | `justfile` with documented recipes (`setup`, `lint`, `test`, `up`, `down`, `demo`, `docs`) | 1 | `just --list` documents every recipe |
 | M0.6 | GitHub Actions CI: lint, types, tests on 3.13 and 3.14; uv cache; concurrency groups; least-privilege `permissions`; actions pinned by SHA | 3 | CI green on `main`; median run under 5 minutes |
 | M0.7 | Governance: CONTRIBUTING, CODE_OF_CONDUCT (Contributor Covenant 2.1), SECURITY.md, issue forms, PR template, CODEOWNERS, labels, ruleset protecting `main` | 3 | a test PR shows the template and required checks |
@@ -435,7 +435,7 @@ as assets with checks. **Estimate: 55 h.**
 | M8.8 | Declarative automation conditions; retry policies; concurrency pools for external APIs | 3 | parallel backfills never exceed API limits |
 | M8.9 | Tests: assets materialised in memory with recorded, synthetic HTTP fixtures; schedule and sensor tests | 4 | tests run offline in CI |
 | M8.10 | Alerts on run or check failure through a configurable webhook | 2 | a failing check posts a test notification |
-| M8.11 | Ask BirdWeather (support@birdweather.com) to confirm that non-commercial, aggregate-only use of the public GraphQL API is acceptable; record the answer in the licence register | 1 | written answer stored with the register; the connector stays off without it |
+| M8.11 | Ask BirdWeather (<support@birdweather.com>) to confirm that non-commercial, aggregate-only use of the public GraphQL API is acceptable; record the answer in the licence register | 1 | written answer stored with the register; the connector stays off without it |
 | M8.12 | BirdWeather context asset: hourly `counts` and `topSpecies` over each sensor's bounding box with a minimum-score filter; aggregates only; station names, IDs and private stations excluded; at most 4 calls per grid cell per hour; labelled as third-party automated detections | 6 | a 7-day backfill stays within the call limit; the schema has no station or detection-level fields |
 
 **Demo:** Dagster UI showing the full asset graph from external APIs to
@@ -655,7 +655,7 @@ their own microphone. **Estimate: 20 h.**
 | Which three to five Locus Sonus streams make the default allow-list? | M8.2 | listening survey of bird-rich, rural streams at dawn; documented in the catalogue config |
 | What is the best default duty cycle for bandwidth vs. coverage? | M5.4 | compare dawn-weighted schedules against continuous listening on the simulator |
 | Should eBird be added as an optional context connector? | M8.5 | review its current terms; only if it adds value beyond GBIF and BirdWeather |
-| Does BirdWeather accept non-commercial, aggregate-only use of its public API? | M8.12 | e-mail to support@birdweather.com (M8.11) |
+| Does BirdWeather accept non-commercial, aggregate-only use of its public API? | M8.12 | e-mail to <support@birdweather.com> (M8.11) |
 | Is a public live demo worth its hosting cost, or is the static demo enough? | M12.7 | decide after v0.5.0 based on interest |
 | Which Raspberry Pi model and microphone give the best value? | M17.1 | short bench test of two or three microphones |
 | Does a 128-bin uint8 cold tier keep enough detail for false-colour images? | M7.5 | visual and numeric comparison against float32 |

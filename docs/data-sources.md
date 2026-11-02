@@ -5,7 +5,7 @@ and how personal data is kept out. Terms were read on **2 November 2026** and
 are reviewed every quarter (roadmap item M10.7). A connector whose terms
 change is switched off by configuration until it is reviewed again.
 
-**Ground rules for all sources**
+## Ground rules for all sources
 
 1. **Features, not recordings.** Audio from live sources is decoded and
    analysed in memory and never written to disk, logs or traces
@@ -38,7 +38,7 @@ change is switched off by configuration until it is reviewed again.
 
 Shown in the dashboard footer, the API's `/v1/about` response and the docs:
 
-> Live sounds: Locus Sonus – Locustream open microphones (www.locusonus.org).
+> Live sounds: Locus Sonus – Locustream open microphones ([www.locusonus.org](https://www.locusonus.org)).
 > Weather data by Open-Meteo.com (CC BY 4.0).
 > Species context: GBIF.org, occurrence search, accessed on the date shown.
 > Nearby detections: BirdWeather (birdweather.com), automated BirdNET
