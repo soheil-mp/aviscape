@@ -278,7 +278,7 @@ HTTP response, wired the way the final system will be. **Estimate: 22 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
-| M1.1 | Minimal synthetic source: seeded tone-plus-noise generator emitting 60 s frames, real time or accelerated | 2 | same seed gives byte-identical audio |
+| ✅ M1.1 | Minimal synthetic source: seeded tone-plus-noise generator emitting 60 s frames, real time or accelerated | 2 | same seed gives byte-identical audio |
 | M1.2 | Minimal DSP: STFT, RMS dBFS and NDSI, with analytic tests | 3 | NDSI of band-limited synthetic noise matches the expected value |
 | M1.3 | Single-node Kafka 4.x (KRaft) in Compose; one topic; JSON payload for now | 2 | `just up` starts a healthy broker |
 | M1.4 | Producer, and a consumer that upserts into a local DuckDB file keyed by `(sensor_id, window_start)` | 4 | replaying the same hour twice leaves 60 rows |

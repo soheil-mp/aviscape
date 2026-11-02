@@ -57,6 +57,7 @@ select = [
     "B",    # bugbear
     "C4",   # comprehensions
     "D",    # docstrings
+    "DTZ",  # timezone-aware datetimes (event time matters here)
     "E",    # pycodestyle errors
     "ERA",  # commented-out code
     "F",    # pyflakes
