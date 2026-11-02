@@ -6,7 +6,7 @@ the [target architecture](docs/architecture.md) and the
 [architecture decision records](docs/adr/).
 
 - **Last updated:** 2 November 2026
-- **Status:** planning done; implementation starts with [M0](#m0--foundations-and-engineering-standards).
+- **Status:** in progress: most of [M0](#m0--foundations-and-engineering-standards) and the first two items of [M1](#m1--walking-skeleton) are done (marked ✅).
 - **Size:** 20 milestones, 163 work items, **728 estimated hours** (about
   875 hours with a 20 % contingency). At 15 hours a week that is roughly
   eleven months; at 25 hours a week, about seven.
@@ -279,7 +279,7 @@ HTTP response, wired the way the final system will be. **Estimate: 22 h.**
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
 | ✅ M1.1 | Minimal synthetic source: seeded tone-plus-noise generator emitting 60 s frames, real time or accelerated | 2 | same seed gives byte-identical audio |
-| M1.2 | Minimal DSP: STFT, RMS dBFS and NDSI, with analytic tests | 3 | NDSI of band-limited synthetic noise matches the expected value |
+| ✅ M1.2 | Minimal DSP: STFT, RMS dBFS and NDSI, with analytic tests | 3 | NDSI of band-limited synthetic noise matches the expected value |
 | M1.3 | Single-node Kafka 4.x (KRaft) in Compose; one topic; JSON payload for now | 2 | `just up` starts a healthy broker |
 | M1.4 | Producer, and a consumer that upserts into a local DuckDB file keyed by `(sensor_id, window_start)` | 4 | replaying the same hour twice leaves 60 rows |
 | M1.5 | FastAPI endpoint `GET /v1/sensors/{id}/minutes` reading DuckDB | 3 | OpenAPI page lists the endpoint; contract test passes |
@@ -666,3 +666,4 @@ their own microphone. **Estimate: 20 h.**
 | :-- | :-- |
 | 2026-11-02 | Research notes, data-source register, target architecture, seven ADRs and this roadmap. Repository set up with the MIT licence, `.gitignore`, `.env.example` and a gitleaks pre-commit hook. |
 | 2026-11-02 | BirdWeather added as optional, aggregate-only third-party context ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md); items M6.11, M8.11, M8.12, M9.9, M12.9). |
+| 2026-11-02 | Implementation started: M0.1–M0.7 and M0.12 (workspace, lint and types, tests, task runner, hooks, CI, governance, licence check), M1.1 (synthetic source) and M1.2 (spectrogram, RMS dBFS, NDSI). |

@@ -6,9 +6,10 @@ indices at the edge, and streams them through Kafka into a DuckLake
 lakehouse, where they are joined with weather and sun position,
 quality-checked and served to a live dashboard.
 
-> **Status: planning.** The research, architecture and a 728-hour roadmap
-> are done; implementation starts with milestone M0. There is no runnable
-> code yet. See [Status and plans](#status-and-plans).
+> **Status: early development.** Research, architecture and a 728-hour
+> roadmap are done; the development toolchain, CI and the first
+> signal-processing code are in place. The platform does not run end to end
+> yet. See [Status and plans](#status-and-plans).
 
 ## What it will do
 
@@ -111,7 +112,7 @@ curl localhost:8000/v1/sensors/synthetic-1/minutes
 
 | Done | Next |
 | :-- | :-- |
-| Research, target architecture, data-source register, eight ADRs, roadmap; repository with MIT licence and secret scanning | M0: toolchain, CI and docs site. M1: the walking skeleton (v0.1.0) |
+| Research, architecture, data-source register, eight ADRs, roadmap. uv workspace with six typed packages; Ruff, strict mypy, pytest with Hypothesis and coverage gates; pre-commit hooks; CI on Python 3.13 and 3.14 with a full-history secret scan and a licence check; contributing, conduct and security policies. First code: a seeded synthetic audio source, and a spectrogram, RMS level and NDSI with analytic tests | Rest of M0 (dev container, Renovate, release automation, docs site). M1: Kafka, the lake sink, the API and the end-to-end demo (v0.1.0) |
 
 The work ahead is in [ROADMAP.md](ROADMAP.md) and the issues. Releases
 follow the milestones: real-time monitoring of live microphones arrives with
