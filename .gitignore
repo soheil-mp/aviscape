@@ -1,0 +1,74 @@
+# --- Secrets and local configuration -------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.age
+!*.sops.*
+
+# --- Data: nothing recorded, downloaded or generated is ever committed ----
+# Audio, lake files and caches live outside git. Fixtures that must be
+# versioned are small, synthetic and live under tests/fixtures/.
+data/
+.cache/
+*.wav
+*.flac
+*.mp3
+*.ogg
+*.opus
+*.parquet
+*.duckdb
+*.duckdb.wal
+*.ducklake
+!tests/fixtures/**
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.python-version.local
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.benchmarks/
+.mutmut-cache
+mutants/
+
+# --- dbt / Dagster ----------------------------------------------------------
+target/
+dbt_packages/
+logs/
+.dagster/
+tmp*/
+
+# --- Node / web -------------------------------------------------------------
+node_modules/
+dist/
+build/
+.vite/
+playwright-report/
+test-results/
+.playwright-mcp/
+
+# --- Docs -------------------------------------------------------------------
+site/
+
+# --- Containers and Kubernetes ---------------------------------------------
+*.tar
+kubeconfig*
+.kube/
+
+# --- Editors and OS --------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+.DS_Store
+Thumbs.db
