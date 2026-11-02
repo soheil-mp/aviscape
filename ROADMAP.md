@@ -256,7 +256,7 @@ tested, scanned for secrets and released the same way. **Estimate: 28 h.**
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
 | ✅ M0.1 | uv workspace with Python 3.13; package skeletons (`aviscape-dsp`, `aviscape-synth`, `aviscape-contracts`, `aviscape-edge`, `aviscape-stream`, `aviscape-api`) in `src/` layout with PEP 621 metadata; lockfile committed | 3 | `uv sync --locked` works on a fresh clone and every package imports |
-| M0.2 | Ruff (lint and format) and mypy `--strict`; `py.typed` markers | 2 | `just lint` passes; a deliberate violation fails CI |
+| ✅ M0.2 | Ruff (lint and format) and mypy `--strict`; `py.typed` markers | 2 | `just lint` passes; a deliberate violation fails CI |
 | M0.3 | pytest with branch coverage, pytest-xdist, Hypothesis profiles (`dev`, `ci`); coverage gates | 3 | `just test` reports coverage; gates enforced in CI |
 | M0.4 | Extend pre-commit: Ruff, mypy, yamllint, actionlint, hadolint, shellcheck, markdownlint-cli2, Conventional Commit message check | 2 | all hooks pass on the repository |
 | M0.5 | `justfile` with documented recipes (`setup`, `lint`, `test`, `up`, `down`, `demo`, `docs`) | 1 | `just --list` documents every recipe |

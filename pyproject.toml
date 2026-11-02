@@ -36,4 +36,55 @@ aviscape-stream = { workspace = true }
 aviscape-synth = { workspace = true }
 
 [dependency-groups]
-dev = []
+dev = [
+    "mypy>=2.4.1",
+    "ruff>=0.17.3",
+]
+
+# --- Ruff: linting and formatting -------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = ["packages/*/src", "packages/*/tests", "tools"]
+
+[tool.ruff.lint]
+select = [
+    "A",    # builtins shadowing
+    "B",    # bugbear
+    "C4",   # comprehensions
+    "D",    # docstrings
+    "E",    # pycodestyle errors
+    "ERA",  # commented-out code
+    "F",    # pyflakes
+    "I",    # import sorting
+    "N",    # naming
+    "NPY",  # NumPy-specific rules
+    "PERF", # performance anti-patterns
+    "PL",   # pylint
+    "PT",   # pytest style
+    "RUF",  # ruff-specific rules
+    "S",    # security (bandit)
+    "SIM",  # simplifications
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warnings
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["D", "S101", "PLR2004"]
+"conftest.py" = ["D"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# --- mypy: strict static typing ---------------------------------------------
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/packages/aviscape-dsp/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-synth/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-contracts/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-edge/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-stream/src:$MYPY_CONFIG_FILE_DIR/packages/aviscape-api/src"
+files = ["packages", "tools"]
+explicit_package_bases = true
