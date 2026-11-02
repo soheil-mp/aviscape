@@ -11,8 +11,12 @@ Every change must keep to them.
   no datasets meant for training or evaluating models. Every value comes
   from documented, deterministic signal processing or statistics
   ([ADR 0002](docs/adr/0002-deterministic-signal-processing-without-machine-learning.md)).
-- **No data sources whose content is produced by classifiers**, such as
-  automated species-detection feeds.
+- **Third-party detection feeds are context only.** BirdWeather detections
+  are stored as aggregated counts, labelled as third-party automated
+  detections, and never used to compute anything, never treated as labels or
+  ground truth, and never scored for accuracy or agreement. No detection-level
+  rows, station names or audio
+  ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md)).
 - **No user accounts** and no storing of other people's data.
 - **No security tooling that finds or exploits vulnerabilities** as part of
   the product.

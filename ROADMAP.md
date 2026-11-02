@@ -7,8 +7,8 @@ the [target architecture](docs/architecture.md) and the
 
 - **Last updated:** 2 November 2026
 - **Status:** planning done; implementation starts with [M0](#m0--foundations-and-engineering-standards).
-- **Size:** 20 milestones, 158 work items, **707 estimated hours** (about
-  850 hours with a 20 % contingency). At 15 hours a week that is roughly
+- **Size:** 20 milestones, 163 work items, **728 estimated hours** (about
+  875 hours with a 20 % contingency). At 15 hours a week that is roughly
   eleven months; at 25 hours a week, about seven.
 
 **How to read it.** Estimates are focused working hours and include tests and
@@ -65,6 +65,9 @@ chorus timing and weather-aware activity trends.
 
 - **Species identification.** No classifiers, trained models or inference of
   any kind ([ADR 0002](docs/adr/0002-deterministic-signal-processing-without-machine-learning.md)).
+  Species reported by BirdWeather's community stations are shown only as
+  labelled, aggregated third-party context, never evaluated or used as
+  ground truth ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md)).
 - **Storing or replaying live audio** ([ADR 0003](docs/adr/0003-raw-audio-never-leaves-memory.md)).
 - **User accounts or user-contributed data.** The dashboard and API are
   read-only and anonymous.
@@ -102,7 +105,7 @@ chorus timing and weather-aware activity trends.
  xeno-canto corpus ┘            QA flags, events, bands          │
                                                                  ▼
  Open-Meteo, GBIF,      Dagster assets ──► dbt models     Quix Streams: validate,
- stream catalogue ────► + asset checks       │            dedup, enrich, rollups
+ BirdWeather, catalog ► + asset checks       │            dedup, enrich, rollups
                                              ▼                   │
                         DuckLake (SeaweedFS S3 + PostgreSQL) ◄───┘ exactly-once sink
                                              │
@@ -193,13 +196,13 @@ An item is done when all of the following hold:
 | | [M3](#m3--synthetic-soundscapes-and-replay) | Synthetic soundscapes and replay | 34 | |
 | | [M4](#m4--contracts-and-schemas) | Contracts and schemas | 27 | v0.2.0 |
 | C. Real-time path | [M5](#m5--edge-agent) | Edge agent | 53 | |
-| | [M6](#m6--streaming-backbone-and-stream-processing) | Streaming backbone and stream processing | 49 | v0.3.0 |
+| | [M6](#m6--streaming-backbone-and-stream-processing) | Streaming backbone and stream processing | 55 | v0.3.0 |
 | D. Lakehouse and batch | [M7](#m7--lakehouse) | Lakehouse | 41 | |
-| | [M8](#m8--batch-ingestion-and-orchestration) | Batch ingestion and orchestration | 48 | |
-| | [M9](#m9--transformations-and-data-modelling) | Transformations and data modelling | 41 | v0.4.0 |
+| | [M8](#m8--batch-ingestion-and-orchestration) | Batch ingestion and orchestration | 55 | |
+| | [M9](#m9--transformations-and-data-modelling) | Transformations and data modelling | 45 | v0.4.0 |
 | E. Quality, serving, UI | [M10](#m10--data-quality-and-governance) | Data quality and governance | 36 | |
 | | [M11](#m11--serving-api) | Serving API | 28 | |
-| | [M12](#m12--web-dashboard) | Web dashboard | 47 | v0.5.0 |
+| | [M12](#m12--web-dashboard) | Web dashboard | 51 | v0.5.0 |
 | F. Platform operations | [M13](#m13--containers-and-local-platform) | Containers and local platform | 24 | |
 | | [M14](#m14--observability-and-reliability) | Observability and reliability | 33 | v0.6.0 |
 | G. Kubernetes and supply chain | [M15](#m15--kubernetes-and-gitops) | Kubernetes and GitOps | 45 | |
@@ -207,7 +210,7 @@ An item is done when all of the following hold:
 | H. Field, insight, release | [M17](#m17--edge-reference-node) | Edge reference node (optional hardware) | 20 | |
 | | [M18](#m18--analysis-and-ecological-insight) | Analysis and ecological insight | 29 | |
 | | [M19](#m19--documentation-and-v10-release) | Documentation and v1.0 release | 21 | v1.0.0 |
-| | | **Total** | **707** | |
+| | | **Total** | **728** | |
 
 ### Dependencies
 
@@ -376,7 +379,7 @@ sensor at once; pulling the network cable loses nothing.
 ### M6 — Streaming backbone and stream processing
 
 **Goal:** validated, deduplicated, enriched streams with defined guarantees,
-plus live state for every sensor. **Estimate: 49 h.**
+plus live state for every sensor. **Estimate: 55 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
@@ -390,6 +393,7 @@ plus live state for every sensor. **Estimate: 49 h.**
 | M6.8 | Dawn chorus onset detector: first sustained exceedance of the sensor's bird-band baseline after nautical dawn; emitted as an event | 5 | onset found within ±2 minutes on synthetic scenarios |
 | M6.9 | Processing guarantees: exactly-once via Kafka transactions; semantics per hop documented; failure-injection tests (kill mid-transaction) | 6 | no loss and no duplication across 50 injected crashes |
 | M6.10 | Load test: 100 virtual sensors at 60×; capacity notes (partitions, instances) | 4 | report with throughput and lag curves |
+| M6.11 | Live BirdWeather context: `newDetection` subscription filtered to stations near each sensor (station IDs in memory only, private stations excluded), aggregated to 15-minute species counts per grid cell on `aviscape.context.birdweather-counts.v1`; polling fallback; kill switch; enabled only after M8.11 | 6 | counts match a recorded synthetic event stream; no station identifiers in any topic |
 
 **Demo:** chaos replay with duplicates, reordering and a crashed processor,
 and a clean, gap-free enriched stream at the end.
@@ -417,7 +421,7 @@ equal Kafka offsets exactly.
 ### M8 — Batch ingestion and orchestration
 
 **Goal:** Dagster owns every scheduled and event-driven batch task, declared
-as assets with checks. **Estimate: 48 h.**
+as assets with checks. **Estimate: 55 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
@@ -431,6 +435,8 @@ as assets with checks. **Estimate: 48 h.**
 | M8.8 | Declarative automation conditions; retry policies; concurrency pools for external APIs | 3 | parallel backfills never exceed API limits |
 | M8.9 | Tests: assets materialised in memory with recorded, synthetic HTTP fixtures; schedule and sensor tests | 4 | tests run offline in CI |
 | M8.10 | Alerts on run or check failure through a configurable webhook | 2 | a failing check posts a test notification |
+| M8.11 | Ask BirdWeather (support@birdweather.com) to confirm that non-commercial, aggregate-only use of the public GraphQL API is acceptable; record the answer in the licence register | 1 | written answer stored with the register; the connector stays off without it |
+| M8.12 | BirdWeather context asset: hourly `counts` and `topSpecies` over each sensor's bounding box with a minimum-score filter; aggregates only; station names, IDs and private stations excluded; at most 4 calls per grid cell per hour; labelled as third-party automated detections | 6 | a 7-day backfill stays within the call limit; the schema has no station or detection-level fields |
 
 **Demo:** Dagster UI showing the full asset graph from external APIs to
 marts, with green checks and a freshness timeline.
@@ -438,7 +444,7 @@ marts, with green checks and a freshness timeline.
 ### M9 — Transformations and data modelling
 
 **Goal:** a tested dimensional model on DuckLake, from bronze to marts that
-answer the project's questions. **Estimate: 41 h.**
+answer the project's questions. **Estimate: 45 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
@@ -450,6 +456,7 @@ answer the project's questions. **Estimate: 41 h.**
 | M9.6 | Statistical baselines: rolling 14-day median and MAD per sensor and sun-relative minute; robust z-scores; rule-based "unusual activity" flags | 6 | flags reproduce hand-computed values on fixtures |
 | M9.7 | Model contracts, generic and singular tests, dbt unit tests for tricky logic | 5 | every model has a contract and at least one test |
 | M9.8 | dbt models as Dagster assets; dbt docs and exposures in the docs site | 3 | one lineage graph from source to API |
+| M9.9 | `fct_birdweather_hourly` and `mart_species_context`: soundscape activity side by side with nearby automated detections and GBIF records; no accuracy or agreement metrics | 4 | mart documents its labelling rules; tests forbid detection-level columns |
 
 **Demo:** "How did dawn chorus onset move over the last 30 days, and on
 which mornings did rain make the numbers unreliable?" answered by one query.
@@ -491,7 +498,7 @@ excluded from the weather-adjusted mart.
 ### M12 — Web dashboard
 
 **Goal:** a fast, accessible dashboard that makes the soundscape visible,
-plus a public static demo. **Estimate: 47 h.**
+plus a public static demo. **Estimate: 51 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
@@ -503,6 +510,7 @@ plus a public static demo. **Estimate: 47 h.**
 | M12.6 | Accessibility (WCAG 2.2 AA: keyboard, contrast, colour-blind-safe palettes) and responsive layout | 4 | axe checks pass; works at 360 px width |
 | M12.7 | Static demo built from synthetic data, deployed to GitHub Pages | 4 | demo link in the README |
 | M12.8 | Playwright end-to-end and visual regression tests; Lighthouse CI budgets | 5 | budgets enforced in CI |
+| M12.9 | "Reported nearby" panel: species from BirdWeather stations in the last hour and day, labelled as unverified automated detections, with attribution; hidden when the connector is off | 4 | passes accessibility checks; disappears cleanly when disabled |
 
 **Demo:** the public demo shows a full synthetic day growing in accelerated
 time.
@@ -635,6 +643,8 @@ their own microphone. **Estimate: 20 h.**
 | Bandwidth use of live streams | medium | medium | dawn-weighted duty cycle; stream cap; per-stream bitrate in the catalogue |
 | Stream timestamps are imprecise | high | low | explicit `time_uncertainty_s`; minute resolution; drift metrics |
 | Upstream terms change | low | high | quarterly licence review; connector kill switch in config |
+| BirdWeather's terms limit automated access and storage | medium | medium | written confirmation before enabling (M8.11); aggregates only; low call volume; kill switch ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md)) |
+| Third-party automated detections include false positives | high | medium | labelled as unverified; aggregated with a minimum score; never used as ground truth or to compute anything |
 | Scope creep for a solo maintainer | high | medium | walking skeleton; phase gates; Compose before Kubernetes; optional milestones marked |
 | Python version friction across dbt and the rest | medium | low | 3.13 baseline; services in separate images; 3.14 tested where possible |
 
@@ -644,7 +654,8 @@ their own microphone. **Estimate: 20 h.**
 | :-- | :-- | :-- |
 | Which three to five Locus Sonus streams make the default allow-list? | M8.2 | listening survey of bird-rich, rural streams at dawn; documented in the catalogue config |
 | What is the best default duty cycle for bandwidth vs. coverage? | M5.4 | compare dawn-weighted schedules against continuous listening on the simulator |
-| Should eBird be added as an optional context connector? | M8.5 | review its current terms; only if it adds value beyond GBIF |
+| Should eBird be added as an optional context connector? | M8.5 | review its current terms; only if it adds value beyond GBIF and BirdWeather |
+| Does BirdWeather accept non-commercial, aggregate-only use of its public API? | M8.12 | e-mail to support@birdweather.com (M8.11) |
 | Is a public live demo worth its hosting cost, or is the static demo enough? | M12.7 | decide after v0.5.0 based on interest |
 | Which Raspberry Pi model and microphone give the best value? | M17.1 | short bench test of two or three microphones |
 | Does a 128-bin uint8 cold tier keep enough detail for false-colour images? | M7.5 | visual and numeric comparison against float32 |
@@ -654,3 +665,4 @@ their own microphone. **Estimate: 20 h.**
 | Date | Change |
 | :-- | :-- |
 | 2026-11-02 | Research notes, data-source register, target architecture, seven ADRs and this roadmap. Repository set up with the MIT licence, `.gitignore`, `.env.example` and a gitleaks pre-commit hook. |
+| 2026-11-02 | BirdWeather added as optional, aggregate-only third-party context ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md); items M6.11, M8.11, M8.12, M9.9, M12.9). |
