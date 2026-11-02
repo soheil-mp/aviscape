@@ -1,0 +1,39 @@
+[project]
+name = "aviscape"
+version = "0.0.0"
+description = "Real-time, model-free bird soundscape monitoring (workspace root)."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+authors = [{ name = "Soheil Mohammadpour" }]
+dependencies = [
+    "aviscape-api",
+    "aviscape-contracts",
+    "aviscape-dsp",
+    "aviscape-edge",
+    "aviscape-stream",
+    "aviscape-synth",
+]
+
+[project.urls]
+Repository = "https://github.com/soheil-mp/aviscape"
+Roadmap = "https://github.com/soheil-mp/aviscape/blob/main/ROADMAP.md"
+
+[tool.uv]
+# The root only ties the workspace together; it is never built or published.
+package = false
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+aviscape-api = { workspace = true }
+aviscape-contracts = { workspace = true }
+aviscape-dsp = { workspace = true }
+aviscape-edge = { workspace = true }
+aviscape-stream = { workspace = true }
+aviscape-synth = { workspace = true }
+
+[dependency-groups]
+dev = []
