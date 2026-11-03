@@ -112,7 +112,7 @@ curl localhost:8000/v1/sensors/synthetic-1/minutes
 
 | Done | Next |
 | :-- | :-- |
-| Research, architecture, data-source register, eight ADRs, roadmap. uv workspace with six typed packages; Ruff, strict mypy, pytest with Hypothesis and coverage gates; pre-commit hooks; CI on Python 3.13 and 3.14 with a full-history secret scan and a licence check; contributing, conduct and security policies. First code: a seeded synthetic audio source, and a spectrogram, RMS level and NDSI with analytic tests | Rest of M0 (dev container, Renovate, release automation, docs site). M1: Kafka, the lake sink, the API and the end-to-end demo (v0.1.0) |
+| Research, architecture, data-source register, eight ADRs, roadmap. uv workspace with six typed packages; Ruff, strict mypy, pytest with Hypothesis and coverage gates; pre-commit hooks; CI on Python 3.13 and 3.14 with a full-history secret scan and a licence check; contributing, conduct and security policies. First code: a seeded synthetic audio source; in `aviscape-dsp`, the audio frame model (resampling to 22.05 kHz, down-mix, DC removal), signal QA metrics, mode-based background noise and SNR, and the first indices (NDSI, entropy Ht/Hf/H, ACI), each with analytic tests | Rest of M0 (dev container, Renovate, release automation, docs site). M1: Kafka, the lake sink, the API and the end-to-end demo (v0.1.0). The remaining M2 indices (ADI, AEI, BI, EVN, ACT, spectral index vectors) |
 
 The work ahead is in [ROADMAP.md](ROADMAP.md) and the issues. Releases
 follow the milestones: real-time monitoring of live microphones arrives with

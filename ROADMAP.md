@@ -6,7 +6,7 @@ the [target architecture](docs/architecture.md) and the
 [architecture decision records](docs/adr/).
 
 - **Last updated:** 3 November 2026
-- **Status:** in progress: most of [M0](#m0--foundations-and-engineering-standards) and the first two items of [M1](#m1--walking-skeleton) are done (marked ✅).
+- **Status:** in progress: most of [M0](#m0--foundations-and-engineering-standards), the first two items of [M1](#m1--walking-skeleton) and the first indices of [M2](#m2--signal-processing-core) are done (marked ✅).
 - **Size:** 20 milestones, 163 work items, **728 estimated hours** (about
   875 hours with a 20 % contingency). At 15 hours a week that is roughly
   eleven months; at 25 hours a week, about seven.
