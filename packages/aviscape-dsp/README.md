@@ -11,6 +11,7 @@ Part of [aviscape](../../README.md). See the [roadmap](../../ROADMAP.md) for wha
 | `aviscape_dsp.audio` | `prepare()`: any PCM to a mono float64 `AudioFrame` at 22.05 kHz without DC offset |
 | `aviscape_dsp.spectrum` | `spectrogram()`: one-sided PSD per frame (Hann, 512 samples, Parseval-preserving) |
 | `aviscape_dsp.levels` | `rms()` and `rms_dbfs()` (AES17 dBFS) |
+| `aviscape_dsp.qa` | Signal quality: clipping ratio, DC offset, peak and RMS dBFS, crest factor, digital silence, dropouts; `assess()` computes them all |
 | `aviscape_dsp.indices` | `ndsi()` (Kasten et al., 2012) |
 
 ```python
