@@ -13,7 +13,7 @@ Part of [aviscape](../../README.md). See the [roadmap](../../ROADMAP.md) for wha
 | `aviscape_dsp.levels` | `rms()` and `rms_dbfs()` (AES17 dBFS) |
 | `aviscape_dsp.qa` | Signal quality: clipping ratio, DC offset, peak and RMS dBFS, crest factor, digital silence, dropouts; `assess()` computes them all |
 | `aviscape_dsp.noise` | Background noise per frequency bin from the histogram mode (Towsey, 2017) and the envelope SNR |
-| `aviscape_dsp.indices` | `ndsi()` (Kasten et al., 2012) |
+| `aviscape_dsp.indices` | `ndsi()` (Kasten et al., 2012); `temporal_entropy()`, `spectral_entropy()` and `acoustic_entropy()` (Sueur et al., 2008) |
 
 ```python
 import numpy as np

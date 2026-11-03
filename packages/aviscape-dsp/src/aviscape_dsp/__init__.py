@@ -1,7 +1,14 @@
 """Deterministic soundscape signal processing: spectrograms, acoustic indices, signal QA."""
 
 from aviscape_dsp.audio import ANALYSIS_SAMPLE_RATE, AudioFrame, prepare
-from aviscape_dsp.indices import NDSI_ANTHROPHONY_HZ, NDSI_BIOPHONY_HZ, ndsi
+from aviscape_dsp.indices import (
+    NDSI_ANTHROPHONY_HZ,
+    NDSI_BIOPHONY_HZ,
+    acoustic_entropy,
+    ndsi,
+    spectral_entropy,
+    temporal_entropy,
+)
 from aviscape_dsp.levels import FULL_SCALE_SINE_RMS, rms, rms_dbfs
 from aviscape_dsp.spectrum import DEFAULT_FRAME_LENGTH, Spectrogram, spectrogram
 
@@ -14,11 +21,14 @@ __all__ = [
     "AudioFrame",
     "Spectrogram",
     "__version__",
+    "acoustic_entropy",
     "ndsi",
     "prepare",
     "rms",
     "rms_dbfs",
+    "spectral_entropy",
     "spectrogram",
+    "temporal_entropy",
 ]
 
 __version__ = "0.0.0"
