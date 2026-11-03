@@ -302,7 +302,7 @@ independent implementation. **Estimate: 67 h.**
 | ✅ M2.3 | Signal QA metrics: clipping ratio, DC offset, RMS and peak dBFS, crest factor, digital-silence runs, dropouts | 4 | each metric has a synthetic fault that triggers it |
 | ✅ M2.4 | Background noise (mode-based BGN per bin) and SNR, after Towsey (2017) | 4 | BGN of stationary noise within 0.5 dB of its true level |
 | ✅ M2.5 | Entropy: temporal (Ht), spectral (Hf) and H (Sueur et al., 2008) | 3 | white noise gives Ht and Hf near 1; a pure tone gives low Hf |
-| M2.6 | Acoustic Complexity Index (Pieretti et al., 2011), summary and per-bin | 4 | a stationary tone gives near-zero ACI; modulated tones rank higher |
+| ✅ M2.6 | Acoustic Complexity Index (Pieretti et al., 2011), summary and per-bin | 4 | a stationary tone gives near-zero ACI; modulated tones rank higher |
 | M2.7 | ADI and AEI (Villanueva-Rivera et al., 2011) with threshold and band-step parameters | 3 | uniform band occupancy maximises ADI and minimises AEI |
 | M2.8 | Bioacoustic Index (Boelman et al., 2007), 2–8 kHz default | 2 | energy added inside the band raises BI; outside it does not |
 | M2.9 | NDSI (Kasten et al., 2012), anthrophony 1–2 kHz, biophony 2–11 kHz, finalised | 2 | values bounded in [−1, 1]; symmetric test cases pass |
@@ -667,4 +667,4 @@ their own microphone. **Estimate: 20 h.**
 | 2026-11-02 | Research notes, data-source register, target architecture, seven ADRs and this roadmap. Repository set up with the MIT licence, `.gitignore`, `.env.example` and a gitleaks pre-commit hook. |
 | 2026-11-02 | BirdWeather added as optional, aggregate-only third-party context ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md); items M6.11, M8.11, M8.12, M9.9, M12.9). |
 | 2026-11-02 | Implementation started: M0.1–M0.7 and M0.12 (workspace, lint and types, tests, task runner, hooks, CI, governance, licence check), M1.1 (synthetic source) and M1.2 (spectrogram, RMS dBFS, NDSI). |
-| 2026-11-03 | M2.1 (audio frame model: integer and float PCM, down-mix, polyphase resampling to 22.05 kHz, DC removal), M2.3 (signal QA: clipping, DC offset, peak and RMS level, crest factor, digital silence, dropouts), M2.4 (mode-based background noise per bin and envelope SNR; median over bins within 0.15 dB of the true level of stationary noise, single bins scatter by about 0.7 dB) and M2.5 (temporal, spectral and acoustic entropy). |
+| 2026-11-03 | M2.1 (audio frame model: integer and float PCM, down-mix, polyphase resampling to 22.05 kHz, DC removal), M2.3 (signal QA: clipping, DC offset, peak and RMS level, crest factor, digital silence, dropouts), M2.4 (mode-based background noise per bin and envelope SNR; median over bins within 0.15 dB of the true level of stationary noise, single bins scatter by about 0.7 dB), M2.5 (temporal, spectral and acoustic entropy) and M2.6 (Acoustic Complexity Index, total and per bin, with optional temporal chunks). |

@@ -7,6 +7,7 @@ with roadmap milestone M2.
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -118,3 +119,63 @@ def spectral_entropy(spec: Spectrogram) -> float:
 def acoustic_entropy(samples: ArrayLike, spec: Spectrogram) -> float:
     """Acoustic entropy ``H = Ht * Hf`` (Sueur et al., 2008), in [0, 1]."""
     return temporal_entropy(samples) * spectral_entropy(spec)
+
+
+@dataclass(frozen=True, slots=True)
+class AcousticComplexity:
+    """Acoustic Complexity Index of a window.
+
+    Attributes:
+        total: Sum of the per-bin values over all frequency bins.
+        per_bin: ACI of each frequency bin, shape ``(n_bins,)``; ``0`` for silent bins.
+        chunks: Number of temporal chunks the window was split into.
+    """
+
+    total: float
+    per_bin: NDArray[np.float64]
+    chunks: int
+
+
+def acoustic_complexity(spec: Spectrogram, *, chunk_s: float | None = None) -> AcousticComplexity:
+    """Acoustic Complexity Index (Pieretti et al., 2011).
+
+    For every frequency bin and every temporal chunk, ACI is the summed absolute change in
+    intensity between neighbouring frames divided by the summed intensity:
+
+    ``ACI(bin, chunk) = sum_k |I[k + 1] - I[k]| / sum_k I[k]``
+
+    The per-bin value adds up the chunks, and the total adds up the bins. Intensity is the
+    amplitude spectrum (the square root of the PSD). Steady sounds (a constant tone, an engine
+    hum) score near zero however loud they are; sounds whose intensity changes from frame to
+    frame, such as song, score high. Like the original, the index depends on frame length and
+    chunk length, so those must be reported with it.
+
+    Reference: Pieretti, N., Farina, A. & Morri, D. (2011). A new methodology to infer the
+    singing activity of an avian community: the Acoustic Complexity Index (ACI). *Ecological
+    Indicators*, 11(3), 868-873.
+
+    Args:
+        spec: Spectrogram of the window, with at least two frames per chunk.
+        chunk_s: Length of a temporal chunk in seconds; ``None`` uses the whole window as one
+            chunk. Trailing frames that do not fill a chunk are dropped.
+
+    Raises:
+        ValueError: If a chunk would hold fewer than two frames.
+    """
+    hop_s = spec.hop_length / spec.sample_rate
+    frames_per_chunk = spec.n_frames if chunk_s is None else math.floor(chunk_s / hop_s + 1e-9)
+    if frames_per_chunk < 2 or frames_per_chunk > spec.n_frames:  # noqa: PLR2004 - a change needs two frames
+        msg = (
+            f"a chunk must hold between 2 and {spec.n_frames} frames, "
+            f"got {frames_per_chunk} (chunk_s={chunk_s}, hop {hop_s:.4f} s)"
+        )
+        raise ValueError(msg)
+    chunks = spec.n_frames // frames_per_chunk
+    intensity = np.sqrt(spec.psd[: chunks * frames_per_chunk])
+    blocks = intensity.reshape(chunks, frames_per_chunk, -1)
+    change = np.abs(np.diff(blocks, axis=1)).sum(axis=1)
+    total = blocks.sum(axis=1)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        per_chunk = np.where(total > 0, change / total, 0.0)
+    per_bin = np.asarray(per_chunk.sum(axis=0), dtype=np.float64)
+    return AcousticComplexity(total=float(per_bin.sum()), per_bin=per_bin, chunks=chunks)
