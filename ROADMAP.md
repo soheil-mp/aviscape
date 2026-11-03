@@ -5,7 +5,7 @@ field-tested 1.0 release. It is grounded in the [research notes](docs/research.m
 the [target architecture](docs/architecture.md) and the
 [architecture decision records](docs/adr/).
 
-- **Last updated:** 2 November 2026
+- **Last updated:** 3 November 2026
 - **Status:** in progress: most of [M0](#m0--foundations-and-engineering-standards) and the first two items of [M1](#m1--walking-skeleton) are done (marked ✅).
 - **Size:** 20 milestones, 163 work items, **728 estimated hours** (about
   875 hours with a 20 % contingency). At 15 hours a week that is roughly
@@ -297,7 +297,7 @@ independent implementation. **Estimate: 67 h.**
 
 | ID | Work item | Est. (h) | Done when |
 | :-- | :-- | --: | :-- |
-| M2.1 | Audio frame model: mono down-mix, polyphase resampling to 22.05 kHz, integer and float handling, DC removal | 4 | resampled sine keeps frequency and level within tolerance |
+| ✅ M2.1 | Audio frame model: mono down-mix, polyphase resampling to 22.05 kHz, integer and float handling, DC removal | 4 | resampled sine keeps frequency and level within tolerance |
 | M2.2 | Spectrogram engine: STFT (Hann, 512-sample frames by default), documented amplitude, power and dB conventions, float32 throughout | 4 | Parseval check and known-tone tests pass |
 | M2.3 | Signal QA metrics: clipping ratio, DC offset, RMS and peak dBFS, crest factor, digital-silence runs, dropouts | 4 | each metric has a synthetic fault that triggers it |
 | M2.4 | Background noise (mode-based BGN per bin) and SNR, after Towsey (2017) | 4 | BGN of stationary noise within 0.5 dB of its true level |
@@ -667,3 +667,4 @@ their own microphone. **Estimate: 20 h.**
 | 2026-11-02 | Research notes, data-source register, target architecture, seven ADRs and this roadmap. Repository set up with the MIT licence, `.gitignore`, `.env.example` and a gitleaks pre-commit hook. |
 | 2026-11-02 | BirdWeather added as optional, aggregate-only third-party context ([ADR 0008](docs/adr/0008-birdweather-detections-as-third-party-context.md); items M6.11, M8.11, M8.12, M9.9, M12.9). |
 | 2026-11-02 | Implementation started: M0.1–M0.7 and M0.12 (workspace, lint and types, tests, task runner, hooks, CI, governance, licence check), M1.1 (synthetic source) and M1.2 (spectrogram, RMS dBFS, NDSI). |
+| 2026-11-03 | M2.1 (audio frame model: integer and float PCM, down-mix, polyphase resampling to 22.05 kHz, DC removal). |
